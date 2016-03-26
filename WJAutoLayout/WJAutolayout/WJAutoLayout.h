@@ -81,7 +81,7 @@
 + (void)verticalViews:(NSArray *)views t:(CGFloat)top b:(CGFloat)bottom l:(CGFloat)left r:(CGFloat)right s:(CGFloat)space sup:(UIView *)superView;
 
 
-/**  设定相对父视图平均等分若干子视图并纵横向排列 horAndVerViews:纵横向排列的视图数组  t:上  b:下  l:左  r:右  hs:横向间距 vs:纵向间隙 maxHC:横向最大数 ratio:高度相对宽度的比例 sup:父视图  */
+/**  设定相对父视图平均等分若干子视图并纵横向排列 horAndVerViews:纵横向排列的视图数组  t:上  b:下  l:左  r:右  hs:横向间距 vs:纵向间隙 maxHC:横向最大数 ratio:高度相对宽度的比例 sup:父视图  ani:是否动画*/
 + (void)horAndVerViews:(NSArray *)views
                     t:(CGFloat)top
                     b:(CGFloat)bottom
@@ -91,7 +91,8 @@
                    vs:(CGFloat)verticalSpace
                 maxHC:(NSInteger)maxHorizontalCount
                 ratio:(CGFloat)ratio
-                  sup:(UIView *)superView;
+                   sup:(UIView *)superView
+                   ani:(BOOL)animation;
 
 
 

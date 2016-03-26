@@ -232,26 +232,25 @@
     CGFloat viewW = (superView.frame.size.width - left - right - space * (views.count -1))/views.count;
     CGFloat viewH = (superView.frame.size.height - top - bottom);
     for (int i = 0; i < views.count; i++) {
-        if ([views[i] isKindOfClass:[UIView class]]) {
-            UIView *view = views[i];
+        
+        void (^complete)() = ^(UIView *view){
             view.frame = CGRectMake(left +(i * (viewW + space)), top, viewW, viewH);
             if (![view.superview isEqual:superView]) {
                 [superView addSubview:view];
             }
+        };
+        
+        if ([views[i] isKindOfClass:[UIView class]]) {
+            UIView *view = views[i];
+            complete(view);
         }
         if ([views[i] isKindOfClass:[UIButton class]]) {
             UIButton *btn = views[i];
-            btn.frame = CGRectMake(left +(i * (viewW + space)), top, viewW, viewH);
-            if (![btn.superview isEqual:superView]) {
-                [superView addSubview:btn];
-            }
+            complete(btn);
         }
         if ([views[i] isKindOfClass:[UILabel class]]) {
             UILabel *lb = views[i];
-            lb.frame = CGRectMake(left +(i * (viewW + space)), top, viewW, viewH);
-            if (![lb.superview isEqual:superView]) {
-                [superView addSubview:lb];
-            }
+            complete(lb);
         }
         
     }
@@ -263,57 +262,60 @@
     
     CGFloat viewW = (superView.frame.size.width - left - right);
     CGFloat viewH = (superView.frame.size.height - top - bottom - space * (views.count -1))/views.count;
+    
     for (int i = 0; i < views.count; i++) {
-        if ([views[i] isKindOfClass:[UIView class]]) {
-            UIView *view = views[i];
+        void (^complete)() = ^(UIView *view){
             view.frame = CGRectMake(left, top + (space + viewH) * i, viewW, viewH);
             if (![view.superview isEqual:superView]) {
                 [superView addSubview:view];
             }
+        };
+        if ([views[i] isKindOfClass:[UIView class]]) {
+            UIView *view = views[i];
+            complete(view);
+           
         }
         if ([views[i] isKindOfClass:[UIButton class]]) {
             UIButton *btn = views[i];
-            btn.frame = CGRectMake(left, top + (space + viewH) * i, viewW, viewH);
-            if (![btn.superview isEqual:superView]) {
-                [superView addSubview:btn];
-            }
+            complete(btn);
         }
         if ([views[i] isKindOfClass:[UILabel class]]) {
             UILabel *lb = views[i];
-            lb.frame = CGRectMake(left, top + (space + viewH) * i, viewW, viewH);
-            if (![lb.superview isEqual:superView]) {
-                [superView addSubview:lb];
-            }
+            complete(lb);
         }
     }
 }
 
 + (void)horAndVerViews:(NSArray *)views
-                    t:(CGFloat)top
-                    b:(CGFloat)bottom
-                    l:(CGFloat)left
-                    r:(CGFloat)right
-                   hs:(CGFloat)horizontalSpace
-                   vs:(CGFloat)verticalSpace
-                maxHC:(NSInteger)maxHorizontalCount
-                ratio:(CGFloat)ratio
-                  sup:(UIView *)superView{
+                     t:(CGFloat)top
+                     b:(CGFloat)bottom
+                     l:(CGFloat)left
+                     r:(CGFloat)right
+                    hs:(CGFloat)horizontalSpace
+                    vs:(CGFloat)verticalSpace
+                 maxHC:(NSInteger)maxHorizontalCount
+                 ratio:(CGFloat)ratio
+                   sup:(UIView *)superView
+                   ani:(BOOL)animation{
     
     NSInteger column;
-    
     if (views.count >= maxHorizontalCount) {
         column = maxHorizontalCount;
     }else{
         column = views.count;
     }
-
     CGFloat viewW = (superView.frame.size.width - left - right - horizontalSpace * (column -1))/column;
     CGFloat viewH = viewW * ratio;
     
     for (int i = 0; i < views.count; i++) {
-        if ([views[i] isKindOfClass:[UIView class]]) {
-            UIView *view = views[i];
+        void (^complete)() = ^(UIView *view){
             view.frame = CGRectMake(left +(i % column * (viewW + horizontalSpace)), top + (i/column * (verticalSpace + viewH)), viewW, viewH);
+            if (animation) {
+                view.alpha = 0.0;
+                [UIView animateWithDuration:0.5 animations:^{
+                    view.alpha = 1;
+                }];
+            }
             if (i == views.count -1) {
                 CGRect frame = superView.frame;
                 frame.size.height = CGRectGetMaxY(view.frame) + bottom;
@@ -321,37 +323,24 @@
             }
             if (![view.superview isEqual:superView]) {
                 [superView addSubview:view];
-            }
+            };
+        };
+        if ([views[i] isKindOfClass:[UIView class]]) {
+            UIView *view = views[i];
+            complete(view);
         }
         if ([views[i] isKindOfClass:[UIButton class]]) {
-            UIButton *btn = views[i];
-            btn.frame = CGRectMake(left +(i % column * (viewW + horizontalSpace)), top + (i/column * (verticalSpace + viewH)), viewW, viewH);
-            if (i == views.count -1) {
-                CGRect frame = superView.frame;
-                frame.size.height = CGRectGetMaxY(btn.frame) + bottom;
-                superView.frame = frame;
-            }
-            if (![btn.superview isEqual:superView]) {
-                [superView addSubview:btn];
-            }
+            UIButton *view = views[i];
+            complete(view);
+           
         }
         if ([views[i] isKindOfClass:[UILabel class]]) {
-            UILabel *lb = views[i];
-            lb.frame = CGRectMake(left +(i % column * (viewW + horizontalSpace)), top + (i/column * (verticalSpace + viewH)), viewW, viewH);
-            if (i == views.count -1) {
-                CGRect frame = superView.frame;
-                frame.size.height = CGRectGetMaxY(lb.frame) + bottom;
-                superView.frame = frame;
-            }
-            if (![lb.superview isEqual:superView]) {
-                [superView addSubview:lb];
-            }
+            UILabel *view = views[i];
+            complete(view);
         }
-        
     }
-    
-    
 }
+
 
 
 @end

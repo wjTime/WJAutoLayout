@@ -81,12 +81,16 @@
     for (int i = 0; i < 12; i++) {
         UIButton *btn = [[UIButton alloc]init];
         btn.backgroundColor = [UIColor lightGrayColor];
+        [btn addTarget:self action:@selector(click) forControlEvents:UIControlEventTouchUpInside];
         [array addObject:btn];
     }
-    [WJAutoLayout horAndVerViews:array t:10 b:10 l:10 r:10 hs:20 vs:20 maxHC:4 ratio:0.5 sup:view];
+    [WJAutoLayout horAndVerViews:array t:10 b:10 l:10 r:10 hs:20 vs:20 maxHC:4 ratio:0.5 sup:view ani:YES];
     
 }
 
+- (void)click{
+    NSLog(@"click");
+}
 
 
 - (void)didReceiveMemoryWarning {
